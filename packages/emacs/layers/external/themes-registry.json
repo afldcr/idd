@@ -1,0 +1,13 @@
+{
+    "doom": {
+	"via": "github",
+	"owner": "hlissner",
+	"ref": "fb5edd1464aa88341f3013421eca4d9a51aef66d",
+        "repo": "emacs-doom-themes",
+        "sha256": "0mzjcly7h6rabsm0jpqdpy0b6rqcsl7c127ng6pw9122541blg6v",
+	"attrs": {
+	    "isTheme": true,
+	    "themeDirectory": "./themes"
+	}
+    }
+}

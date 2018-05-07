@@ -1,0 +1,157 @@
+#!/usr/bin/env python2.7
+from __future__ import print_function
+from abc import ABCMeta, abstractmethod
+import json
+import logging
+import os
+import re
+import subprocess
+
+# Apparently, unless you provide a file to subprocess commands,
+# handles are just inherited
+DEVNULL = open('/dev/null', 'w')
+
+# The suffix of registry files, containing JSON descriptions of sources
+REGISTRY_FILE_SUFFIX = 'registry.json'
+
+# A regex which matches paths to include when walking the directory
+# tree. Setting this to '.*' will match any path.
+INCLUDE_DIR_REGEX = re.compile('^[^._]')
+
+def nix_hash(url, unpack=True):
+    logging.debug('calculating hash for {}'.format(url))
+    args = ['nix-prefetch-url', url]
+    if unpack:
+        args.append('--unpack')
+    return subprocess.check_output(args, stderr=DEVNULL).rstrip()
+
+def git_ref(url, branch='master'):
+    logging.debug('updating {} reference for git repo at {}'.format(branch, url))
+    return subprocess.check_output(
+        args = ['git', 'ls-remote', '--quiet', '--heads', url, branch],
+        stderr = DEVNULL
+    ).split('\t', 1)[0]
+
+
+class Registry:
+    def __init__(self, path):
+        self._path = path
+        logging.info('reading source registry at {}'.format(self._path))
+        self._srcs = {}
+        with open(self._path) as file:
+            data = json.load(file)
+            for k, v in data.items():
+                self._srcs[k] = Source(v)
+
+    def updated(self):
+        for src in self._srcs.values():
+            if src.updated():
+                return True
+        return False
+
+    def update_all(self):
+        for src in self._srcs.values():
+            src.update()
+
+    def save(self):
+        if self.updated():
+            data = {k: v.to_dict() for k, v in self._srcs.items()}
+            logging.info('saving source registry at {}'.format(self._path))
+            with open(self._path, 'w') as file:
+                json.dump(data, file, indent=4, sort_keys=True)
+        else:
+            logging.info('source registry at {} didn\'t change'.format(self._path))
+
+
+class Source(object):
+    __metaclass__ = ABCMeta
+
+    def __new__(cls, data):
+        if cls is Source:
+            via = data['via']
+            if via == 'github':
+                cls = GithubSource
+            elif via == 'url':
+                cls = UrlSource
+            else:
+                raise Exception('Invalid source type: {}'.format(via))
+        return object.__new__(cls, data)
+
+    @abstractmethod
+    def __init__(self, data):
+        return NotImplemented
+
+    @abstractmethod
+    def update(self):
+        return NotImplemented
+
+    def updated(self):
+        return self._changed
+
+    def to_dict(self):
+        return {k: v for k, v in self.__dict__.items() if k[:1] != "_"}
+
+
+class GithubSource(Source):
+    def __init__(self, data):
+        self._changed = False
+        self.via = 'github'
+        self.owner = data['owner']
+        self.repo = data['repo']
+        self.ref = data['ref']
+        self.sha256 = data['sha256']
+        try:
+            self.attrs = data['attrs']
+        except KeyError:
+            pass
+
+    def url(self):
+        return 'https://github.com/{owner}/{repo}/archive/{ref}.tar.gz'.format(**self.__dict__)
+
+    def update(self):
+        old_ref = self.ref
+        old_sha256 = self.sha256
+        logging.info('updating Github source {}/{}'.format(self.owner, self.repo))
+        self.ref = git_ref('https://github.com/{owner}/{repo}'.format(**self.__dict__))
+        self.sha256 = nix_hash(self.url())
+        if self.ref != old_ref or self.sha256 != old_sha256:
+            self._changed = True
+
+class UrlSource(Source):
+    def __init__(self, data):
+        self._changed = False
+        self.via = 'url'
+        self.url = data['url']
+        self.sha256 = data['sha256']
+        try:
+            self.attrs = data['attrs']
+        except KeyError:
+            pass
+
+    def update(self):
+        old_sha256 = self.sha256
+        logging.info('updating url source at {}'.format(self.url))
+        self.sha256 = nix_hash(self.url, unpack=False)
+        if self.sha256 != old_sha256:
+            self._changed = True
+
+if __name__ == '__main__':
+    logging.basicConfig(
+        level=logging.DEBUG,
+        format='%(asctime)s %(message)s'
+    )
+
+    # Search for all files with the name REGISTRY_NAME under the root
+    # directory. These are the files which contain JSON descriptions of
+    # sources.
+    registries = []
+    for root, dirs, files in os.walk('packages'):
+        dirs = filter(INCLUDE_DIR_REGEX.match, dirs)
+        for f in files:
+            if f.endswith(REGISTRY_FILE_SUFFIX):
+                path = os.path.join(root, f)
+                registries.append(Registry(path))
+    for r in registries:
+        r.update_all()
+    for r in registries:
+        r.save()

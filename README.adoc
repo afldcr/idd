@@ -1,0 +1,72 @@
+= Idd: Declarative, local configuration
+:author: James Alexander Feldman-Crough
+
+__Idd__footnote:[Idd is, of course, an anagram for "`I do delcare!`"] is an early attempt to replicate https://nixos.org[NixOS]'s declarative system configuration at the user level.
+
+[WARNING]
+====
+This README (like _Idd_ itself) is woefully unfinished at the moment. Reader beware!
+====
+
+Rather than managing packages imperatively, users manage a single configuration file and trigger atomic rebuilds of their enviornment. That file can be used to recreate that configuration on any other machine with https://nixos.org/nix[Nix] and __https://github.com/afldcr/idd[Idd]__ available.
+
+My personal configurationfootnote:[this configuration is abridged for readability] looks like this:
+
+[source,nix]
+----
+# ~/.config/idd.nix
+{ lib, ... }:
+{
+  # Configuration layers to add to Emacs at build time-- these layers
+  # may include external sources, setup hooks, language features, and
+  # just about anything else.
+  emacs.layers = layers:
+    with layers;
+    [ afldcr
+      adoc-mode
+      evil
+      magit
+      nix-mode
+      projectile
+      racket-mode
+      swiper
+    ];
+
+  # `emacs.themes` accepts special configuration layers which are
+  # automatically hashed and added to `custom-safe-themes`. Any layers
+  # not in this section are ignored!
+  emacs.themes = themes:
+    with themes;
+    [ doom
+    ];
+}
+----
+
+== Configuring _Idd_
+
+_Idd_ is configured per-user rather than globally, allowing multiple configurations to exist on the same machine.
+
+Configuration files are searched in this order:
+
+. `$XDG_CONFIG_HOME/idd.nix`
+. `$HOME/.config/idd.nix`
+. `$HOME/.idd.nix`
+
+_Idd_ configurations are written in the https://nixos.org/nix/manual/index.html#ch-expression-language[Nix expression language]. They should evaluate to either a https://nixos.org/nix/manual/index.html#idm140737318015328[set] or a https://nixos.org/nix/manual/index.html#ss-functions[function] taking a set and returning a new set.
+
+If the configuration file is a function, it is passed a set with the following properties:
+
+// TODO(@afldcr): Enumerate lib better
+lib::
+  Utility functions for manipulating values, defined in `./packages/_lib/default.nix`.
+nixpkgs::
+  The current version of https://nixos.org/nixpkgs[Nixpkgs]. Because Nixpkgs' philosophy differs a bit from the goals of _Idd_, we'd recommend using it sparingly.
+
+
+== Source registries
+
+Source registries are JSON files in the _Idd_ source tree which are used to generate Nix build rules for external dependencies.
+
+Rather than defining sources in the Nix expression language, _Idd_ tries, where possible, to use JSON to allow the values to be more easily manipulated. For instance, the script `./bin/update` will walk all registries and ensure that they are pointing to the latest versions.
+
+_TODO: discuss more about this_

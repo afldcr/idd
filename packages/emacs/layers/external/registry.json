@@ -1,0 +1,162 @@
+{
+    "adoc-mode": {
+        "attrs": {
+            "deps": [
+                "markup-faces"
+            ]
+        }, 
+        "owner": "sensorflo", 
+        "ref": "745884359a1b8826ede2c4cfd2f0b5478953ac40", 
+        "repo": "adoc-mode", 
+        "sha256": "199da15f6p84809z33w3m35lrk9bgx8qpgnxsxgisli373mpzvd8", 
+        "via": "github"
+    }, 
+    "async": {
+        "owner": "jwiegley", 
+        "ref": "d0a29f15d6898e675bf980390d21231997033239", 
+        "repo": "emacs-async", 
+        "sha256": "1wwlfa07k7355byplmfd13zahj9a02w3bdx1247w1m9zc1rg8wg8", 
+        "via": "github"
+    }, 
+    "dash": {
+        "owner": "magnars", 
+        "ref": "a74f4cfcdc8d0642a9f602ad494f0354f27dacc9", 
+        "repo": "dash.el", 
+        "sha256": "1kzijmjxjxgr7p8clphzvmm47vczckbs8mza9an77c25bn627ywl", 
+        "via": "github"
+    }, 
+    "evil": {
+        "attrs": {
+            "deps": [
+                "goto-chg", 
+                "undo-tree"
+            ]
+        }, 
+        "owner": "emacs-evil", 
+        "ref": "230b87212c81aaa68ef5547a6b998d9c365fe139", 
+        "repo": "evil", 
+        "sha256": "0c9zy3bpck10gcrv79kd3h7i4ygd5bgbgy773n0lg7a2r5kwn1gx", 
+        "via": "github"
+    }, 
+    "evil-magit": {
+        "attrs": {
+            "deps": [
+                "magit", 
+                "evil"
+            ]
+        }, 
+        "owner": "emacs-evil", 
+        "ref": "dbf5a646a7ce1c35c229dfdc423bd5ecd927a3a8", 
+        "repo": "evil-magit", 
+        "sha256": "0ya0dkviq4pi92ab69a4j674y5r1hc1x3x7r7hlm97ag3a6zfkav", 
+        "via": "github"
+    }, 
+    "ghub": {
+        "attrs": {
+            "deps": []
+        }, 
+        "owner": "magit", 
+        "ref": "4831933da059ee084a16016558b9ccd8c581a8ff", 
+        "repo": "ghub", 
+        "sha256": "1b5jrpj3z989r3mf4jfch8rnaaa5hyb2395xz3v37f0vsphd7s0y", 
+        "via": "github"
+    }, 
+    "goto-chg": {
+        "owner": "emacs-evil", 
+        "ref": "e5b38e4e1378f6ea48fa9e8439f49c2998654aa4", 
+        "repo": "goto-chg", 
+        "sha256": "1fxdvgdafavc4sad5i8g0wvpdqzlgzmvfi07yrah1c5vwkrslbvj", 
+        "via": "github"
+    }, 
+    "hydra": {
+        "owner": "abo-abo", 
+        "ref": "5b8f66299249cc771008248279544b8eb3ecdc19", 
+        "repo": "hydra", 
+        "sha256": "0gdvmjpxl7vs1azb678d9a08pg27i9l2k0jhyqslabhabdvmiq2q", 
+        "via": "github"
+    }, 
+    "magit": {
+        "attrs": {
+            "deps": [
+                "async", 
+                "dash", 
+                "ghub", 
+                "magit-popup", 
+                "with-editor"
+            ], 
+            "sourceRoot": "magit/lisp"
+        }, 
+        "owner": "magit", 
+        "ref": "4c6e9ed0c5619236bc0e7894364a24e43e91eff4", 
+        "repo": "magit", 
+        "sha256": "14sr3947f9kx76ihhcm2ij8gf7jsyg3w5mpkb3c7js9911ibg0hh", 
+        "via": "github"
+    }, 
+    "magit-popup": {
+        "attrs": {
+            "deps": [
+                "dash"
+            ]
+        }, 
+        "owner": "magit", 
+        "ref": "60ff82ac7aa8dbc24eb3c34dbed13ad01f20671c", 
+        "repo": "magit-popup", 
+        "sha256": "1sf5wxfn7hwn6s56sm755s7kqjnw43q3lnf994c2xdc9fpbqcpwh", 
+        "via": "github"
+    }, 
+    "markup-faces": {
+        "owner": "sensorflo", 
+        "ref": "98a807ed82473eb41c6a201ed7ef816d6bcd67b0", 
+        "repo": "markup-faces", 
+        "sha256": "1w6i1m7xdr9cijnmdj35cl99r12vl83qws0qlfhrgvisilshnr27", 
+        "via": "github"
+    }, 
+    "nix-mode": {
+        "owner": "NixOS", 
+        "ref": "cc23fd6a0e394aeeed603e2bfeb4a5ebc63db660", 
+        "repo": "nix-mode", 
+        "sha256": "1vz3s2jx14nzy53f04d821n4f2s22ys5h9s7af6cnpynkwawyhhq", 
+        "via": "github"
+    }, 
+    "projectile": {
+        "owner": "bbatsov", 
+        "ref": "05a064474fab19300f613324d510490a4840f83c", 
+        "repo": "projectile", 
+        "sha256": "08k57pvjd0c9d9q778cjjqclrfqk02y4g5bv4j6c8x41va8ddcjd", 
+        "via": "github"
+    }, 
+    "swiper": {
+        "attrs": {
+            "deps": [
+                "hydra"
+            ]
+        }, 
+        "owner": "abo-abo", 
+        "ref": "7df7ab6292ec85c396d85d837e820d248121ffcf", 
+        "repo": "swiper", 
+        "sha256": "1zzgib3qnm9dary5pms0vq8k2cffg51x74q9g1midmrrc63vn3y4", 
+        "via": "github"
+    }, 
+    "toml-mode": {
+        "owner": "dryman", 
+        "ref": "f6c61817b00f9c4a3cab1bae9c309e0fc45cdd06", 
+        "repo": "toml-mode.el", 
+        "sha256": "05b4ksay85c8y5ncax0qsvnmplwsfiw24z16a58gkarjz938hb57", 
+        "via": "github"
+    }, 
+    "undo-tree": {
+        "attrs": {
+            "unpack": "copyFile"
+        }, 
+        "sha256": "00fja17ibdgyjwfm2a4j7gx7f7m4hxjnmwiaz4452xcwcbwhqbz9", 
+        "url": "http://www.dr-qubit.org/undo-tree/undo-tree.el", 
+        "via": "url"
+    }, 
+    "with-editor": {
+        "owner": "magit", 
+        "ref": "ad5bb005ed3afec2d8b9b2bc1df19fb9b5e2dd84", 
+        "repo": "with-editor", 
+        "sha256": "0hq2dy8djxf45ajk9di1grhgzly0qrijcjfdah8xj5zkwvn9cvlh", 
+        "via": "github"
+    }
+}
